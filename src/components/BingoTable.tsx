@@ -12,9 +12,9 @@ const BingoTable = () => {
         {bingoArr.map((row, i) => {
           return (
             <tr key={row.join()}>
-              <th>{bingo[i]}</th>
+              {/* <th>{bingo[i]}</th> */}
               {row.map((cell) => {
-                return <td key={cell}>{bingo[cell]}</td>;
+                return <td key={cell}>{cell}</td>;
               })}
             </tr>
           );

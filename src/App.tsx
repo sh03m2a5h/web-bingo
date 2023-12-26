@@ -1,15 +1,17 @@
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { unusedNumbersAtom, usedNumbersAtom } from "./states/bingoNumbers";
 import BingoTable from "./components/BingoTable";
-import "./App.scss";
 import ModalWithButton from "./components/Modal";
 import Snowflake from "./components/snowflake";
+import "./App.scss";
 
 function App() {
   const [isOpenRndom, setIsOpenRandom] = useState(false);
   const [randomNumber, setRandomNumber] = useState(0);
 
-  const unusedNumbers = useRecoilState(unusedNumbersAtom);
-  const usedNumbers = [];
+  const [unusedNumbers, setUnusedNumbers] = useRecoilState(unusedNumbersAtom);
+  const [usedNumbers, setUsedNumbers] = useRecoilState(usedNumbersAtom);
 
   const handleOpenRandom = () => {
     const rnd = crypto.getRandomValues(new Uint32Array(1))[0];
@@ -17,11 +19,17 @@ function App() {
     const currentIdx = (rnd / (0xffffffff + 1)) * unusedNumbers.length;
     const current = unusedNumbers[Math.floor(currentIdx)];
 
-    unusedNumbers.splice(unusedNumbers.indexOf(current), 1);
-    usedNumbers.push(current);
+    console.log(unusedNumbers, usedNumbers, current);
 
     setRandomNumber(current);
     setIsOpenRandom(true);
+  };
+
+  const handleCloseRandom = () => {
+    setUnusedNumbers(unusedNumbers.filter((n) => n !== randomNumber));
+    setUsedNumbers([...usedNumbers, randomNumber]);
+
+    setIsOpenRandom(false);
   };
 
   return (
@@ -30,9 +38,6 @@ function App() {
       <main>
         <BingoTable />
         <div className="card">
-          {/* <button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </button> */}
           <div className="inset-0">
             <button
               type="button"
@@ -42,11 +47,10 @@ function App() {
               generate Next Number
             </button>
           </div>
-          <ModalWithButton
-            isOpen={isOpenRndom}
-            onClose={() => setIsOpenRandom(false)}
-          >
-            <p className="text-3xl font-bold text-center">{randomNumber}</p>
+          <ModalWithButton isOpen={isOpenRndom} onClose={handleCloseRandom}>
+            <p className="text-3xl font-bold text-center">
+              {String(randomNumber)}
+            </p>
           </ModalWithButton>
         </div>
       </main>

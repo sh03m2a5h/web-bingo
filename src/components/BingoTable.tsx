@@ -1,4 +1,7 @@
-import "./BingoTable.scss";
+import { useRecoilState } from "recoil";
+import { usedNumbersAtom } from "../states/bingoNumbers";
+import { Transition } from "@headlessui/react";
+// import "./BingoTable.scss";
 
 const bingo = "BINGO";
 const bingoArr = [1, 16, 31, 46, 61].map((e) => {
@@ -6,15 +9,32 @@ const bingoArr = [1, 16, 31, 46, 61].map((e) => {
 });
 
 const BingoTable = () => {
+  const [usedNumbers] = useRecoilState(usedNumbersAtom);
+
   return (
-    <table className="bingo-table">
+    <table className="table-border-collapse">
       <tbody>
         {bingoArr.map((row, i) => {
           return (
             <tr key={row.join()}>
-              {/* <th>{bingo[i]}</th> */}
+              <th className="text-xl text-bold">{bingo[i]}</th>
               {row.map((cell) => {
-                return <td key={cell}>{cell}</td>;
+                if (usedNumbers.includes(cell)) {
+                  return (
+                    <td key={cell}>
+                      <Transition
+                        key={cell}
+                        show={true}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-120"
+                      >
+                        {cell}
+                      </Transition>
+                    </td>
+                  );
+                }
+                return <td key={cell} />;
               })}
             </tr>
           );

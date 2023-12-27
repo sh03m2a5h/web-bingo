@@ -22,6 +22,22 @@ function App() {
     console.log(unusedNumbers, usedNumbers, current);
 
     setRandomNumber(current);
+
+    const startedAt = Date.now();
+    const shuffleRandomFn = () => {
+      const rnd = crypto.getRandomValues(new Uint32Array(1))[0];
+      const currentIdx = (rnd / (0xffffffff + 1)) * unusedNumbers.length;
+      const current = unusedNumbers[Math.floor(currentIdx)];
+      setRandomNumber(current);
+      const diff = Date.now() - startedAt;
+      // duration=10/(-diff/10-1)**2
+      const duration = Math.max(10, 1 / (diff / 12000 - 1) ** 2);
+      if (Date.now() - startedAt < 10000) {
+        setTimeout(shuffleRandomFn, duration);
+      }
+    };
+    setTimeout(shuffleRandomFn, 10);
+
     setIsOpenRandom(true);
   };
 
@@ -48,7 +64,7 @@ function App() {
             </button>
           </div>
           <ModalWithButton isOpen={isOpenRndom} onClose={handleCloseRandom}>
-            <p className="text-3xl font-bold text-center">
+            <p className="text-5xl font-bold text-center">
               {String(randomNumber)}
             </p>
           </ModalWithButton>

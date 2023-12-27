@@ -8,7 +8,7 @@ type ModalProps = {
   children?: React.ReactNode;
 };
 
-export default function ModalWithButton(props: ModalProps) {
+export default function RandomNumberModal(props: ModalProps) {
   // const [isOpen, setIsOpen] = useState(true);
   const isOpen = props.isOpen;
 

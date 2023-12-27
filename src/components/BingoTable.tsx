@@ -12,16 +12,16 @@ const BingoTable = () => {
   const [usedNumbers] = useRecoilState(usedNumbersAtom);
 
   return (
-    <table className="table-border-collapse">
+    <table className="border-collapse">
       <tbody>
         {bingoArr.map((row, i) => {
           return (
             <tr key={row.join()}>
-              <th className="text-xl text-bold">{bingo[i]}</th>
+              <th className="text-2xl text-bold">{bingo[i]}</th>
               {row.map((cell) => {
                 if (usedNumbers.includes(cell)) {
                   return (
-                    <td key={cell}>
+                    <td key={cell} className="text-2xl">
                       <Transition
                         key={cell}
                         show={true}

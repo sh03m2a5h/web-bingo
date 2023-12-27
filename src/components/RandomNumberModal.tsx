@@ -113,7 +113,8 @@ export default function RandomNumberModal(props: ModalProps) {
                       {isFixed && (
                         <ConfettiExplosion
                           zIndex={100}
-                          // onComplete={handleClose}
+                          duration={3000}
+                          onComplete={handleClose}
                         />
                       )}
                     </p>

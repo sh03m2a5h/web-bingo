@@ -1,5 +1,5 @@
 import { useRecoilState } from "recoil";
-import { usedNumbersAtom } from "../states/bingoNumbers";
+import { usedNumbersAtom, unusedNumbersAtom } from "../states/bingoNumbers";
 import { Transition } from "@headlessui/react";
 // import "./BingoTable.scss";
 
@@ -9,7 +9,24 @@ const bingoArr = [1, 16, 31, 46, 61].map((e) => {
 });
 
 const BingoTable = () => {
-  const [usedNumbers] = useRecoilState(usedNumbersAtom);
+  const [usedNumbers, setUsedNumbers] = useRecoilState(usedNumbersAtom);
+  const [unusedNumbers, setUnusedNumbers] = useRecoilState(unusedNumbersAtom);
+
+  const handleCellDoubleClick = (cell: number) => {
+    if (usedNumbers.includes(cell)) {
+      if (!confirm("数字を消しますか?")) {
+        return;
+      }
+      setUsedNumbers(usedNumbers.filter((n) => n !== cell));
+      setUnusedNumbers([...unusedNumbers, cell]);
+    } else {
+      if (!confirm("数字を入れますか?")) {
+        return;
+      }
+      setUsedNumbers([...usedNumbers, cell]);
+      setUnusedNumbers(unusedNumbers.filter((n) => n !== cell));
+    }
+  };
 
   return usedNumbers !== null ? (
     <table className="border-collapse">
@@ -21,7 +38,11 @@ const BingoTable = () => {
               {row.map((cell) => {
                 if (usedNumbers.includes(cell)) {
                   return (
-                    <td key={cell} className="text-2xl">
+                    <td
+                      key={cell}
+                      className="text-2xl select-none"
+                      onDoubleClick={() => handleCellDoubleClick(cell)}
+                    >
                       <Transition
                         key={cell}
                         show={true}
@@ -34,7 +55,12 @@ const BingoTable = () => {
                     </td>
                   );
                 }
-                return <td key={cell} />;
+                return (
+                  <td
+                    key={cell}
+                    onDoubleClick={() => handleCellDoubleClick(cell)}
+                  />
+                );
               })}
             </tr>
           );

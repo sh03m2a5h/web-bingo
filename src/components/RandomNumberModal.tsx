@@ -12,7 +12,7 @@ type ModalProps = {
   children?: React.ReactNode;
 };
 
-const acceleration = 0.03;
+const acceleration = 0.06;
 const maxSpeed = 60; // fps
 const minSpeed = 0.25; // 1 / 4 (seconds^-1)
 
@@ -50,7 +50,9 @@ export default function RandomNumberModal(props: ModalProps) {
 
       duration = (1 / speed) * 1000;
       if (Date.now() - previousShownAt > duration) {
-        const currentIdx = Math.floor(Math.random() * unusedNumbers.length);
+        const random =
+          crypto.getRandomValues(new Uint32Array(1))[0] / 0x100000000;
+        const currentIdx = Math.floor(random * unusedNumbers.length);
         rnd = unusedNumbers[currentIdx];
         setRandomNumber(rnd);
         previousShownAt = Date.now();
@@ -107,30 +109,22 @@ export default function RandomNumberModal(props: ModalProps) {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <div className="mt-2 flex flex-col justify-center items-center">
-                    <p className="text-5xl text-black">
-                      {randomNumber}
-                      {isFixed && (
-                        <ConfettiExplosion
-                          zIndex={100}
-                          duration={3000}
-                          onComplete={handleClose}
-                        />
-                      )}
+                  <div
+                    className="mt-2 flex flex-col justify-center items-center"
+                    onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseUp}
+                  >
+                    <p className="text-8xl text-black select-none">
+                      {randomNumber ?? "もう中身がないよ"}
                     </p>
-                  </div>
-
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:opacity-50"
-                      onMouseDown={handleMouseDown}
-                      onMouseUp={handleMouseUp}
-                      onMouseLeave={handleMouseUp}
-                      disabled={isFixed}
-                    >
-                      加速
-                    </button>
+                    {isFixed && (
+                      <ConfettiExplosion
+                        zIndex={100}
+                        duration={3000}
+                        // onComplete={handleClose}
+                      />
+                    )}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

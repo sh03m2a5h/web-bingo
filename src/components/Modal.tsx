@@ -9,16 +9,7 @@ type ModalProps = {
 };
 
 export default function ModalWithButton(props: ModalProps) {
-  // const [isOpen, setIsOpen] = useState(true);
-  const isOpen = props.isOpen;
-
-  // function closeModal() {
-  //   setIsOpen(false);
-  // }
-
-  // function openModal() {
-  //   setIsOpen(true);
-  // }
+  const { isOpen } = props;
 
   return (
     <>

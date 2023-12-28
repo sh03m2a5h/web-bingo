@@ -11,7 +11,7 @@ const bingoArr = [1, 16, 31, 46, 61].map((e) => {
 const BingoTable = () => {
   const [usedNumbers] = useRecoilState(usedNumbersAtom);
 
-  return (
+  return usedNumbers !== null ? (
     <table className="border-collapse">
       <tbody>
         {bingoArr.map((row, i) => {
@@ -41,7 +41,7 @@ const BingoTable = () => {
         })}
       </tbody>
     </table>
-  );
+  ) : null;
 };
 
 export default BingoTable;

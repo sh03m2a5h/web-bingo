@@ -36,15 +36,14 @@ const BingoTable = () => {
             <tr key={row.join()}>
               <th className="text-2xl text-bold">{bingo[i]}</th>
               {row.map((cell) => {
-                if (usedNumbers.includes(cell)) {
-                  return (
-                    <td
-                      key={cell}
-                      className="text-2xl select-none"
-                      onDoubleClick={() => handleCellDoubleClick(cell)}
-                    >
+                return (
+                  <td
+                    key={cell}
+                    className="text-2xl select-none"
+                    onDoubleClick={() => handleCellDoubleClick(cell)}
+                  >
+                    {usedNumbers.includes(cell) ? (
                       <Transition
-                        key={cell}
                         show={true}
                         enter="transition ease-out duration-100"
                         enterFrom="transform opacity-0 scale-95"
@@ -52,14 +51,8 @@ const BingoTable = () => {
                       >
                         {cell}
                       </Transition>
-                    </td>
-                  );
-                }
-                return (
-                  <td
-                    key={cell}
-                    onDoubleClick={() => handleCellDoubleClick(cell)}
-                  />
+                    ) : null}
+                  </td>
                 );
               })}
             </tr>

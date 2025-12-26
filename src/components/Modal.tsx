@@ -1,15 +1,15 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react"
+import { Fragment } from "react"
 
 type ModalProps = {
-  title?: string;
-  isOpen: boolean;
-  onClose: () => void;
-  children?: React.ReactNode;
-};
+  title?: string
+  isOpen: boolean
+  onClose: () => void
+  children?: React.ReactNode
+}
 
 export default function ModalWithButton(props: ModalProps) {
-  const { isOpen } = props;
+  const { isOpen } = props
 
   return (
     <>
@@ -63,5 +63,5 @@ export default function ModalWithButton(props: ModalProps) {
         </Dialog>
       </Transition>
     </>
-  );
+  )
 }

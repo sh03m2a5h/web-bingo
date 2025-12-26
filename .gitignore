@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Local env
+.env
+.env.*
+
+# GitHub Pages artifact (generated)
+docs
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -12,3 +12,44 @@ This is a [Vite](https://vitejs.dev) project together with React.
 - [CodeSandbox — Discord](https://discord.gg/Ggarp3pX5H)
 - [Vite — GitHub](https://github.com/vitejs/vite)
 - [Vite — Docs](https://vitejs.dev/guide/)
+
+## GitHub Pages デプロイ（Firebase 設定は Secrets/Variables から注入）
+
+このプロジェクトの Firebase 設定（`apiKey` など）はリポジトリに直書きせず、ビルド時に GitHub の `Secrets and variables` から環境変数として注入します。
+
+### 1) GitHub 側の設定
+
+1. `Settings` → `Pages` → `Source` を **GitHub Actions** に設定
+2. `Settings` → `Secrets and variables` → `Actions` で以下を設定
+
+- **Secrets**
+	- `VITE_FIREBASE_API_KEY`
+
+- **Variables**
+	- `VITE_FIREBASE_AUTH_DOMAIN`
+	- `VITE_FIREBASE_PROJECT_ID`
+	- `VITE_FIREBASE_STORAGE_BUCKET`
+	- `VITE_FIREBASE_MESSAGING_SENDER_ID`
+	- `VITE_FIREBASE_APP_ID`
+
+設定後、`main` へ push すると GitHub Actions（[.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)）が走って Pages にデプロイされます。
+
+### 2) ローカル開発（.env）
+
+リポジトリ直下に `.env` を作って以下を設定してください（`.env` は git 追跡しません）。
+
+```bash
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_AUTH_DOMAIN=...
+VITE_FIREBASE_PROJECT_ID=...
+VITE_FIREBASE_STORAGE_BUCKET=...
+VITE_FIREBASE_MESSAGING_SENDER_ID=...
+VITE_FIREBASE_APP_ID=...
+```
+
+起動:
+
+```bash
+pnpm install
+pnpm dev
+```

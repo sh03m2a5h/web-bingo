@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { unusedNumbersAtom, usedNumbersAtom } from './states/bingoNumbers'
 import BingoTable from './components/BingoTable'
@@ -6,19 +6,10 @@ import BingoTable from './components/BingoTable'
 import RandomNumberModal from './components/RandomNumberModal'
 import Snowflake from './components/snowflake'
 import './App.scss'
-import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { firebaseApp } from './firebase'
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyC6CgMb10ILbFggZpLsBuQ4SoFosjavO4I',
-  authDomain: 'yebingo-dbb6d.firebaseapp.com',
-  projectId: 'yebingo-dbb6d',
-  storageBucket: 'yebingo-dbb6d.firebasestorage.app',
-  messagingSenderId: '194131798463',
-  appId: '1:194131798463:web:572d73dbbf65e829bf590a',
-}
-
-initializeApp(firebaseConfig)
+const auth = getAuth(firebaseApp)
 
 function App() {
   const [isOpenRndom, setIsOpenRandom] = useState(false)
@@ -40,8 +31,7 @@ function App() {
     setIsOpenRandom(false)
   }
 
-  const auth = getAuth()
-  auth.onAuthStateChanged(async (user) => {
+  useEffect(() => {
     function getHashedDomain(value: string): Promise<string> {
       const encoder = new TextEncoder()
       const data = encoder.encode(value)
@@ -50,25 +40,32 @@ function App() {
         return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
       })
     }
-    if (user) {
-      const email = user?.email ?? ''
-      const domain = email.split('@')[1] ?? ''
 
-      const hashedDomain = await getHashedDomain(domain)
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const email = user?.email ?? ''
+        const domain = email.split('@')[1] ?? ''
 
-      // 下準備: crypto.createHash('sha256').update(domain).digest('hex');
-      if (
-        // hashedDomain === '591bfe88c880df9685d3e298cac2271681a78e017441426ae3d5bd6c73cd3db7' || // gmail.com
-        hashedDomain === 'a3e777966e6ca2bfb1441f29930a7fe14b01f5aa18f8987de199e6112fa99d1b'
-      ) {
-        setAuthorized(true)
+        const hashedDomain = await getHashedDomain(domain)
+
+        // 下準備: crypto.createHash('sha256').update(domain).digest('hex');
+        if (
+          // hashedDomain === '591bfe88c880df9685d3e298cac2271681a78e017441426ae3d5bd6c73cd3db7' || // gmail.com
+          hashedDomain === 'a3e777966e6ca2bfb1441f29930a7fe14b01f5aa18f8987de199e6112fa99d1b'
+        ) {
+          setAuthorized(true)
+        } else {
+          setAuthorized(false)
+        }
       } else {
         setAuthorized(false)
       }
-    } else {
-      setAuthorized(false)
+    })
+
+    return () => {
+      unsubscribe()
     }
-  })
+  }, [])
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider()
     const result = await signInWithPopup(auth, provider)

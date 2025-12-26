@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && cp -r dist docs",
-    "rebuild": "tsc && vite build && rm -R docs && cp -r dist docs",
+    "build": "tsc && vite build",
+    "build:docs": "tsc && vite build && node scripts/copy-dist-to-docs.mjs",
     "git": "git add . && git commit && git push origin main",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -26,15 +26,15 @@
     "@types/node": "^20.17.10",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
-    "@vitejs/plugin-react-swc": "^3.7.2",
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
+    "@vitejs/plugin-react-swc": "^4.2.2",
     "eslint": "^8.57.1",
     "eslint-plugin-react": "^7.37.3",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.16",
     "sass": "^1.83.0",
     "typescript": "^5.7.2",
-    "vite": "^5.4.11"
+    "vite": "^7.3.0"
   }
 }

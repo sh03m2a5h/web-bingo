@@ -22,6 +22,8 @@ This is a [Vite](https://vitejs.dev) project together with React.
 1. `Settings` → `Pages` → `Source` を **GitHub Actions** に設定
 2. `Settings` → `Secrets and variables` → `Actions` で以下を設定
 
+※ `Environments` → `github-pages` に Secrets/Variables を設定している場合でも動くように、Workflow 側で `environment: github-pages` を build/deploy 両方に指定しています。
+
 - **Secrets**
 	- `VITE_FIREBASE_API_KEY`
 
@@ -33,6 +35,8 @@ This is a [Vite](https://vitejs.dev) project together with React.
 	- `VITE_FIREBASE_APP_ID`
 
 設定後、`main` へ push すると GitHub Actions（[.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)）が走って Pages にデプロイされます。
+
+※ Vite の `import.meta.env` は **ビルド時に値が埋め込まれます**。デプロイ後に GitHub 側で値を変えても、再ビルド/再デプロイしない限り反映されません。
 
 ### 2) ローカル開発（.env）
 
